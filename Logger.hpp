@@ -1,6 +1,8 @@
-#include <Arduino.h>
 #ifndef LOGGER_HPP
 #define LOGGER_HPP
+
+#include <Arduino.h>
+#include <utility>
 
 #ifndef DEBUG
 constexpr bool DEBUG = false;
@@ -13,10 +15,15 @@ class Logger {
 public:
   Logger() = delete;
   template <BasicStreamType stream, BasicPrintableType... Args>
-  static inline void print(stream &str, Args &&... args) {
+  static constexpr inline void print(stream &str, Args &&... args) {
     if constexpr (DEBUG) {
       (str.print(std::forward<Args>(args)), ...);
     }
+  }
+
+  template <BasicPrintableType... Args>
+  static inline void log(Args &&... args) {
+    print(Serial, args...);
   }
 };
 
