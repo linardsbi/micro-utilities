@@ -1,17 +1,17 @@
 {
-  "name": "logger",
+  "name": "micro-utilities",
   "version": "0.0.1",
   "authors": {
     "name": "Linards Biezbardis",
     "email": "kaktoss@inbox.lv"
   },
-  "description": "my logger library",
+  "description": "A collection of utilities for microcontrollers",
   "repository": {
     "type": "git",
     "url": "https://github.com/linardsbi/logger"
   },
   "build": {
-    "flags": "-std=c++2a",
+    "flags": "-std=c++20",
     "unflags": "-std=c++11"
   },
   "platforms": "*"
