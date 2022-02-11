@@ -17,7 +17,13 @@
 */
 #include "String.hpp"
 #include <utility>
+
+#ifdef __AVR__
+#include <avr/pgmspace.h>
+#else
 #include <pgmspace.h>
+#endif
+
 /*********************************************/
 /*  Constructors                             */
 /*********************************************/
@@ -54,7 +60,7 @@ template<typename CharType> constexpr void StringBase<CharType>::fill(CharType c
 {
 	if (reserve(count)) {
         len = c;
-        memset(m_buffer, c, count); 
+        memset(m_buffer, c, count);
         return;
     }
     invalidate();
@@ -188,7 +194,7 @@ template<typename CharType> constexpr void StringBase<CharType>::move(StringBase
     m_buffer = rhs.m_buffer;
     len = rhs.len;
     m_capacity = rhs.m_capacity;
-    
+
 	rhs.m_buffer = nullptr;
 	rhs.m_capacity = 0;
 	rhs.len = 0;
@@ -198,10 +204,10 @@ template<typename CharType> constexpr void StringBase<CharType>::move(StringBase
 template<typename CharType> constexpr StringBase<CharType> & StringBase<CharType>::operator = (const StringBase<CharType> &rhs)
 {
 	if (this == &rhs) return *this;
-	
+
 	if (rhs.m_buffer) copy(rhs.m_buffer, rhs.len);
 	else invalidate();
-	
+
 	return *this;
 }
 
@@ -217,7 +223,7 @@ template<typename CharType> constexpr StringBase<CharType> & StringBase<CharType
 {
 	if (cstr != nullptr) copy(cstr, strlen(cstr));
 	else invalidate();
-	
+
 	return *this;
 }
 
@@ -378,7 +384,7 @@ template<typename CharType> constexpr unsigned char StringBase<CharType>::equals
 	const CharType *p2 = s2.m_buffer;
 	while (*p1) {
 		if (tolower(*p1++) != tolower(*p2++)) return 0;
-	} 
+	}
 	return 1;
 }
 
@@ -408,7 +414,7 @@ template<typename CharType> inline constexpr CharType StringBase<CharType>::char
 	return operator[](loc);
 }
 
-template<typename CharType> constexpr void StringBase<CharType>::setCharAt(unsigned int loc, CharType c) 
+template<typename CharType> constexpr void StringBase<CharType>::setCharAt(unsigned int loc, CharType c)
 {
 	if (loc < len) m_buffer[loc] = c;
 }
@@ -528,7 +534,7 @@ template<typename CharType> constexpr StringBase<CharType> StringBase<CharType>:
 	if (left >= len) return out;
 	if (right > len) right = len;
 	CharType temp = m_buffer[right];  // save the replaced character
-	m_buffer[right] = '\0';	
+	m_buffer[right] = '\0';
 	out = m_buffer + left;  // pointer arithmetic
 	m_buffer[right] = temp;  //restore character
 	return out;
@@ -541,7 +547,7 @@ template<typename CharType> constexpr StringBase<CharType> StringBase<CharType>:
 template<typename CharType> constexpr void StringBase<CharType>::replace(CharType find, CharType replace)
 {
 	if (!m_buffer) return;
-    
+
     for (auto& p : *this) {
         if (p == find) p = replace;
     }
